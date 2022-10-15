@@ -1,19 +1,22 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public abstract class Cars implements Competing{
+public abstract class Cars implements Competing {
 
     private String brand;
     private String model;
     private double engineVolume;
 
-    private ArrayList<Cars> carsForRacing;
+    private final List<Driver<?>> driversForRace = new ArrayList<>();
+    private final List<Mechanic<?>> mechanicsForRace = new ArrayList<>();
+    private final List<Sponsor> sponsorsForRace = new ArrayList<>();
+
 
     public Cars(String brand, String model, double engineVolume) {
         setBrand(brand);
         setModel(model);
         setEngineVolume(engineVolume);
-
-        this.carsForRacing = new ArrayList<>();
     }
 
     public String getBrand() {
@@ -32,8 +35,16 @@ public abstract class Cars implements Competing{
         return model;
     }
 
-    public ArrayList<Cars> getCarsForRacing() {
-        return carsForRacing;
+    public void addDriver(Driver<?>... drivers) {
+      this.driversForRace.addAll(Arrays.asList(drivers));
+    }
+
+    public void addMechanic(Mechanic<?>... mechanics) {
+        this.mechanicsForRace.addAll(Arrays.asList(mechanics));
+    }
+
+    public void addSponsor(Sponsor... sponsors) {
+        this.sponsorsForRace.addAll(Arrays.asList(sponsors));
     }
 
     public void setModel(String model) {
@@ -42,6 +53,18 @@ public abstract class Cars implements Competing{
         } else {
             this.model = model;
         }
+    }
+
+    public List<Driver<?>> getDriversForRace() {
+        return driversForRace;
+    }
+
+    public List<Mechanic<?>> getMechanicsForRace() {
+        return mechanicsForRace;
+    }
+
+    public List<Sponsor> getSponsorsForRace() {
+        return sponsorsForRace;
     }
 
     public double getEngineVolume() {
@@ -59,6 +82,11 @@ public abstract class Cars implements Competing{
     public abstract void startMoving();
 
     public abstract void finishMoving();
+
+    public abstract void passVerification();
+
+    public abstract void repairCar();
+
 
     @Override
     public String toString() {

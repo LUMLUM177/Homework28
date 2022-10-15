@@ -27,4 +27,14 @@ public class Trucks extends Cars implements Competing {
         System.out.println(this.getBrand() + " " + this.getModel() + " развивает максимальную скорость!");
         return 0;
     }
+
+    public void passVerification() {
+        System.out.print("Машина " + getBrand() + " " + getModel() + " прошла техобслуживание. ");
+    }
+
+    public void repairCar() {
+        System.out.print("Машина " + getBrand() + " " + getModel() + " успешно отремонтирована. ");
+    }
+
+
 }

@@ -6,18 +6,17 @@ public abstract class Driver<A> {
     private boolean isDriverLicense = true;
     private int experience;
 
-    private ArrayList<Driver> driversForRacing;
 
     public Driver(String name, boolean driverLicense, int experience) {
         setName(name);
         setDriverLicense(driverLicense);
         setExperience(experience);
-
-        this.driversForRacing = new ArrayList<>();
     }
 
     public abstract void start(A a);
+
     public abstract void stop(A a);
+
     public abstract void refill(A a);
 
 
@@ -51,10 +50,6 @@ public abstract class Driver<A> {
         } else {
             this.experience = experience;
         }
-    }
-
-    public ArrayList<Driver> getDriversForRacing() {
-        return driversForRacing;
     }
 
 //    @Override

@@ -1,21 +1,30 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class ServiceStation<T extends Cars> {
+public class ServiceStation {
 
-    private Queue<T> queue = new LinkedList<>();
+    private Queue<Cars> queue = new LinkedList<>();
 
-    public void addCars(T car) {
+    private void addCars(Cars car) {
         queue.offer(car);
     }
 
+    public void addAuto (Auto auto) {
+        addCars(auto);
+    }
+
+    public void addTruck (Trucks truck) {
+        addCars(truck);
+    }
+
     public void technicalInspection() {
-        T car = queue.poll();
+        Cars car = queue.poll();
         if (car != null) {
-            System.out.println("Авто " + car.getBrand() + " " + car.getModel() + " успешно прошла техосмотр.");
+            car.passVerification();
+            System.out.println();
             technicalInspection();
         } else {
-            System.out.println("В очереди не осталось авто.");
+            System.out.println("В очереди не осталось машин.");
         }
     }
 }

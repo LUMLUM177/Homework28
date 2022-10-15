@@ -1,7 +1,68 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Main {
+
+    private static final List<String> NAMES = List.of(
+            "Николай Кулаков",
+            "Василий Кулаков",
+            "Екатерина Кулакова",
+            "Елизавета Кулакова",
+            "Анастасия Кулакова",
+            "Полина Романчук",
+            "Диана Романчук",
+            "Елизавета Дробина",
+            "Владимир Дробин");
+
+    private static final Random RANDOM = new Random();
+    private static final int MAX_SIZE = 5;
+
+    private static void randomFilling(Queue<String> queue) {
+        int size = RANDOM.nextInt(MAX_SIZE + 1);
+        for (int i = 0; i < size; i++) {
+            queue.offer(NAMES.get(RANDOM.nextInt(NAMES.size())));
+        }
+    }
+
+    private static void add(String name,
+                            Queue<String> queue1,
+                            Queue<String> queue2) {
+        if (queue1.size() == MAX_SIZE && queue2.size() == MAX_SIZE) {
+            System.out.println("Нужно позвать Галю!");
+            return;
+        }
+        if (queue1.size() < queue2.size()) {
+            queue1.offer(name);
+        } else {
+            queue2.offer(name);
+        }
+    }
+
+    private static void remove(Queue<String> queue1,
+                               Queue<String> queue2) {
+        if (RANDOM.nextBoolean()) {
+            queue1.poll();
+        } else {
+            queue2.poll();
+        }
+    }
+
+    private static void printInfo(Cars car) {
+        System.out.print("Информация об авто, участвующем в заезде:" +
+                " марка " + car.getBrand() + ", модель " + car.getModel());
+        System.out.print(", водитель - ");
+        for (Driver<?> driver : car.getDriversForRace()) {
+            System.out.print(driver.getName());
+        }
+        System.out.print(", спонсоры - ");
+        for (Sponsor sponsor : car.getSponsorsForRace()) {
+            System.out.print(sponsor.getName() + ", ");
+        }
+        System.out.print("механик - ");
+        for (Mechanic<?> mechanic : car.getMechanicsForRace()) {
+            System.out.print(mechanic.getName() + " из компании " + mechanic.getCompany());
+        }
+        System.out.println(".");
+    }
 
     public static void example() {
         List<List<String>> biDemArrList = new ArrayList<>();
@@ -22,11 +83,11 @@ public class Main {
         }
         System.out.println();
     }
+
     public static void main(String[] args) {
 
         example();
-
-        Auto auto = new Auto("Auto", "default", 0.0);
+        System.out.println();
 
         Auto audi = new Auto("Audi", "A8", 2.7);
         Auto hyundai = new Auto("Hyundai", "Ferrato", 2.3);
@@ -43,101 +104,71 @@ public class Main {
         Bus cursor = new Bus("ЛиАЗ", "4292", 8);
         Bus mercedez = new Bus("Mercedez-Benz", "Sprinter II", 7);
 
-        Sponsor sponsor = new Sponsor("Default", 15000.00);
         Sponsor megafon = new Sponsor("Мегафон", 25000.00);
         Sponsor mts = new Sponsor("МТС", 30000.00);
         Sponsor beeline = new Sponsor("Билайн", 20000.00);
         Sponsor tele2 = new Sponsor("TELE2", 33000.00);
 
-        DriverB driver = new DriverB("default", false, 0);
         DriverB<Auto> john = new DriverB<>("John", true, 5);
-        john.getInTheCar(hyundai);
         DriverC<Trucks> philipp = new DriverC<>("Philipp", false, 7);
-        philipp.getInTheCar(gazelle);
         DriverD<Bus> elza = new DriverD<>("Elza", true, 10);
-        elza.getInTheCar(mercedez);
 
-        Mechanic mechanic = new Mechanic<>("default", "default");
-        Mechanic nikolay = new Mechanic<>("Николай", "Шины и диски");
-        Mechanic vasiliy = new Mechanic<>("Василий", "Шины");
-        Mechanic sergey = new Mechanic<>("Сергей", "Диски");
+        Mechanic<Auto> nikolay = new Mechanic<>("Николай", "Шины и диски");
+        Mechanic<Trucks> vasiliy = new Mechanic<>("Василий", "Шины");
+        Mechanic<Bus> sergey = new Mechanic<>("Сергей", "Диски");
 
-        System.out.println();
-        auto.getCarsForRacing().add(audi);
-        auto.getCarsForRacing().add(hyundai);
-        auto.getCarsForRacing().add(lada);
-        auto.getCarsForRacing().add(ford);
+        audi.addDriver(john);
+        audi.addMechanic(nikolay);
+        audi.addSponsor(megafon, beeline);
 
-        auto.getCarsForRacing().add(kamaz);
-        auto.getCarsForRacing().add(sable);
-        auto.getCarsForRacing().add(gazelle);
-        auto.getCarsForRacing().add(zil);
+        gazelle.addDriver(philipp);
+        gazelle.addMechanic(vasiliy);
+        gazelle.addSponsor(mts, tele2);
 
-        auto.getCarsForRacing().add(lion);
-        auto.getCarsForRacing().add(city);
-        auto.getCarsForRacing().add(cursor);
-        auto.getCarsForRacing().add(mercedez);
-
-        for (Cars carsForRacing : auto.getCarsForRacing()) {
-            System.out.println("Автомобиль " + carsForRacing.getBrand() + " " + carsForRacing.getModel() +
-                    " будет участвовать в гонке.");
-        }
+        cursor.addDriver(elza);
+        cursor.addMechanic(sergey);
+        cursor.addSponsor(mts, megafon);
 
         System.out.println();
-        sponsor.getSponsorsForRacing().add(megafon);
-        sponsor.getSponsorsForRacing().add(mts);
-        sponsor.getSponsorsForRacing().add(beeline);
-        sponsor.getSponsorsForRacing().add(tele2);
+        List<Cars> carsForRacing = List.of(audi, gazelle, cursor);
 
-        for (Sponsor sponsorsForRacing : sponsor.getSponsorsForRacing()) {
-            System.out.println("Спонсор " + sponsorsForRacing.getName() + " спонсирует заезд на сумму " +
-                    sponsorsForRacing.getAmountSupport() + " рублей.");
-        }
-
-        System.out.println();
-        driver.getDriversForRacing().add(john);
-        driver.getDriversForRacing().add(philipp);
-        driver.getDriversForRacing().add(elza);
-
-        for (int i = 0; i < driver.getDriversForRacing().size(); i++) {
-            System.out.println("Водитель " + driver.getDriversForRacing().get(i) + " будет участвовать в заезде.");
-        }
-
-        System.out.println();
-        mechanic.getMechanicsForRacing().add(nikolay);
-        mechanic.getMechanicsForRacing().add(vasiliy);
-        mechanic.getMechanicsForRacing().add(sergey);
-
-        for (int i = 0; i < mechanic.getMechanicsForRacing().size(); i++) {
-            System.out.println("Механик " + mechanic.getMechanicsForRacing().get(i) + " будет ремонтировать машины.");
+        for (Cars car : carsForRacing) {
+            printInfo(car);
         }
 
         System.out.println();
         nikolay.performMaintenance(audi);
-        vasiliy.repairTheCar(hyundai);
+        vasiliy.repairTheCar(gazelle);
 
         System.out.println();
-        ServiceStation<Auto> serviceStationAuto = new ServiceStation();
-        ServiceStation<Trucks> serviceStationTrucks = new ServiceStation<>();
-        serviceStationAuto.addCars(lada);
-        serviceStationAuto.addCars(hyundai);
-        serviceStationAuto.addCars(ford);
-        serviceStationAuto.technicalInspection();
+        ServiceStation serviceStation = new ServiceStation();
+        serviceStation.addAuto(lada);
+        serviceStation.addAuto(hyundai);
+        serviceStation.addAuto(ford);
+        serviceStation.addTruck(gazelle);
+        serviceStation.addTruck(kamaz);
+        serviceStation.technicalInspection();
 
+
+
+        Queue<String> queue1 = new ArrayDeque<>();
+        Queue<String> queue2 = new ArrayDeque<>();
+        randomFilling(queue1);
+        randomFilling(queue2);
         System.out.println();
-        Supermarket supermarket = new Supermarket();
-        supermarket.addMan("Николай");
-        supermarket.addMan("Василий");
-        supermarket.addMan("Елизавета");
-        supermarket.addMan("Анастасия");
-        supermarket.addMan("Нина");
-        supermarket.addMan("Михаил");
-        supermarket.addMan("Надежда");
-        supermarket.removeMan("Николай");
+        System.out.println("Первая очередь: " + queue1);
+        System.out.println("Вторая очередь: " + queue2);
+        System.out.println();
 
-        supermarket.manQueueFirst();
-        supermarket.manQueueSecond();
+        add("Елизавета Цыбулькина", queue1, queue2);
+        System.out.println("Первая очередь: " + queue1);
+        System.out.println("Вторая очередь: " + queue2);
+        System.out.println();
 
+        remove(queue1, queue2);
+        System.out.println("Первая очередь: " + queue1);
+        System.out.println("Вторая очередь: " + queue2);
+        System.out.println();
 
 
     }
